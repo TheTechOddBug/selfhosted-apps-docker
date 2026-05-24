@@ -192,7 +192,7 @@ OS, C-states, ... these numbers are just for rough idea.
 * ultra7 **265k** - [19W](https://i.imgur.com/DnIRBO1.jpeg) idle
   * 1 stream [633 fps](https://i.imgur.com/eXUldZm.png)
   * 1 stream 4K HDR + tonemapping [200 fps](https://i.imgur.com/ktr6erU.png)
-* ryzen **8700GE** microPC - [8W](https://i.imgur.com/5hZLzqb.jpeg) idle
+* ryzen **8700GE** miniPC - [8W](https://i.imgur.com/5hZLzqb.jpeg) idle
   * 1 stream [270 fps](https://i.imgur.com/C4WehOt.png), AV1 [380 fps](https://i.imgur.com/LEwPrY1.png)
   * 1 stream 4K HDR + tonemapping [60 fps](https://i.imgur.com/1YjpnwV.png), AV1 [70 fps](https://i.imgur.com/8htVRzB.png)
 
