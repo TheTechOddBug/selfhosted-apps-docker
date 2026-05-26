@@ -410,6 +410,28 @@ whatever.{$MY_DOMAIN} {
 }
 ```
 
+**Warning:**<br>
+Since version 2.11 (2026-feb) there has been
+a [change](https://github.com/caddyserver/caddy/pull/7454)
+in the default way Caddy forwards the `Host` header for HTTPS upstreams.<br>
+Caddy now sets the Host header to {upstream_hostport} - *server-blue:443*
+instead of preserving the original requested hostname - *whatever.example.com*.
+This can break shit.
+
+Fix - explicitly set the Host header.
+
+```
+whatever.{$MY_DOMAIN} {
+    reverse_proxy https://server-blue:443 {
+        header_up Host {host}
+        transport http {
+            tls
+            tls_insecure_skip_verify
+        }
+    }
+}
+```
+
 ### Named matchers and IP filtering
 
 Caddy has [matchers](https://caddyserver.com/docs/caddyfile/matchers)<br>
