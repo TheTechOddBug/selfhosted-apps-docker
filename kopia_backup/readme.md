@@ -2,7 +2,7 @@
 
 ###### guide-by-example
 
-*Last update May 2026 kopia v0.23.1*
+*Last update Jun 2026 kopia v0.23.1*
 
 ![logo](https://i.imgur.com/A2mosM6.png)
 
