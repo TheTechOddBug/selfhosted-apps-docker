@@ -193,12 +193,12 @@ kopia snapshot create "${BACKUP_THIS[@]}"
 kopia repository disconnect
 
 # --------------  ERROR EXIT CODES  --------------
-# Kopia does not interrupts its run with an error exit code if a target or a repository are missing.
-# This hides errors and makes systemd OnFailure event ineffective.
-# Below are the checks for the paths existence,
-# resulting in an immediate error exit code if any of them does not exist.
-# They are at the end because some backup might still get done even if something is missing
-# We just want exit code 1 to let systemd know that there was a failure.
+# Kopia does not interrupts its run with an error exit code if a target or a repository are missing
+# this makes systemd OnSuccess OnFailure useless
+# here are the checks for the paths, throwing an immediate error exit code
+# this check is at the end because some backups might still get done even if something else is missing
+# we just want exit code 1 to let systemd know that there was a failure
+# this all goes well with ntfy push notifications
 
 for path in "${BACKUP_THIS[@]}"; do
   if [ ! -e "$path" ]; then
@@ -207,8 +207,8 @@ for path in "${BACKUP_THIS[@]}"; do
   fi
 done
 
-# DELETE THIS $REPOSITORY_PATH CHECK IF YOU BACKUP TO CLOUD, OR A KOPIA SERVER
-# OTHERWISE YOU GONNA GET ERRORS AFTER EACH BACKUP EXECUTION,EVEN WHEN EVERYTHING IS OK
+# delete this REPOSITORY_PATH check if you backup to cloud, or a kopia server
+# otherwise you gonna get errors after each backup execution,even when everything is ok
 
 if [ ! -d "$REPOSITORY_PATH" ]; then
   echo "ERROR: Repository path '$REPOSITORY_PATH' does not exist."
