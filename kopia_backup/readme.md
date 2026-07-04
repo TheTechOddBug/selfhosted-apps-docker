@@ -165,14 +165,13 @@ you will need to be root to browse the backups.
 
 ### The backup script
 
-In linux, passing multiple paths separated by space seems to work fine.<br>
-So both `/home` and `/etc` are set to be backed up.
+Passing multiple paths as an array, they are in quotes separated by space.
 
 `/opt/kopia-backup-home-etc.sh`
 ```bash
 #!/bin/bash
 
-# v0.3
+# v0.4
 # initialize repository
 #   kopia repo create filesystem --path /mnt/mirror/KOPIA/docker_host_kopia
 # for cloud like backblaze
@@ -181,12 +180,16 @@ So both `/home` and `/etc` are set to be backed up.
 # adjust global policy
 #   kopia policy set --global --compression=zstd-fastest --keep-annual=0 --keep-monthly=12 --keep-weekly=0 --keep-daily=14 --keep-hourly=0 --keep-latest=3
 
+# BACKUP_THIS array of targets to backup,
+# space between quoted items is important
+# single item would be just BACKUP_THIS=('/home')
+
 REPOSITORY_PATH='/mnt/mirror/KOPIA/docker_host_kopia'
-BACKUP_THIS='/home /etc'
+BACKUP_THIS=('/home' '/etc')
 export KOPIA_PASSWORD='aaa'
 
-kopia repository connect filesystem --path $REPOSITORY_PATH
-kopia snapshot create $BACKUP_THIS
+kopia repository connect filesystem --path "$REPOSITORY_PATH"
+kopia snapshot create "${BACKUP_THIS[@]}"
 kopia repository disconnect
 
 # --------------  ERROR EXIT CODES  --------------
@@ -197,17 +200,15 @@ kopia repository disconnect
 # They are at the end because some backup might still get done even if something is missing
 # We just want exit code 1 to let systemd know that there was a failure.
 
-IFS=' ' read -ra paths <<< "$BACKUP_THIS"
-for path in "${paths[@]}"; do
+for path in "${BACKUP_THIS[@]}"; do
   if [ ! -e "$path" ]; then
     echo "ERROR: Backup target '$path' does not exist."
     exit 1
   fi
 done
 
-# DELETE THE $REPOSITORY_PATH CHECK IF YOU BACKUP TO CLOUD, OR KOPIA SERVER,...
-# OTHERWISE YOU GONNA GET ERRORS AFTER EACH BACKUP EXECUTION,
-# EVEN WHEN EVERYTHING IS OK.
+# DELETE THIS $REPOSITORY_PATH CHECK IF YOU BACKUP TO CLOUD, OR A KOPIA SERVER
+# OTHERWISE YOU GONNA GET ERRORS AFTER EACH BACKUP EXECUTION,EVEN WHEN EVERYTHING IS OK
 
 if [ ! -d "$REPOSITORY_PATH" ]; then
   echo "ERROR: Repository path '$REPOSITORY_PATH' does not exist."
